@@ -1,0 +1,33 @@
+{
+    "collectionName": "components_elements_pricing_plans",
+    "info": {
+        "displayName": "Pricing Plan",
+        "icon": "money-bill",
+        "description": "Individual pricing plan"
+    },
+    "options": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "price": {
+            "type": "string",
+            "required": true
+        },
+        "features": {
+            "type": "richtext"
+        },
+        "isPopular": {
+            "type": "boolean",
+            "default": false
+        },
+        "ctaText": {
+            "type": "string",
+            "default": "Get Started"
+        },
+        "ctaLink": {
+            "type": "string"
+        }
+    }
+}

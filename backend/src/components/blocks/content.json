@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_blocks_contents",
+  "info": {
+    "displayName": "content",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

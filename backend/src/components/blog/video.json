@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_blog_videos",
+  "info": {
+    "displayName": "Video"
+  },
+  "options": {},
+  "attributes": {
+    "url": {
+      "type": "string",
+      "default": "Placeholder: https://www.youtube.com/watch?v=..."
+    },
+    "caption": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

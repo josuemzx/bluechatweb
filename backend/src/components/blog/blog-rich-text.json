@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_blog_blog_rich_texts",
+  "info": {
+    "displayName": "blog.RichText"
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}

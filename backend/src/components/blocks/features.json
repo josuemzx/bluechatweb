@@ -1,0 +1,22 @@
+{
+    "collectionName": "components_blocks_features",
+    "info": {
+        "displayName": "Features Grid",
+        "icon": "layout",
+        "description": "Grid of features with icons"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "text"
+        },
+        "items": {
+            "type": "component",
+            "repeatable": true,
+            "component": "elements.feature-item"
+        }
+    }
+}

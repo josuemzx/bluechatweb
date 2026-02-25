@@ -1,0 +1,22 @@
+{
+    "collectionName": "components_blocks_pricings",
+    "info": {
+        "displayName": "Pricing Table",
+        "icon": "shopping-cart",
+        "description": "Pricing plans table"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "text"
+        },
+        "plans": {
+            "type": "component",
+            "repeatable": true,
+            "component": "elements.pricing-plan"
+        }
+    }
+}
