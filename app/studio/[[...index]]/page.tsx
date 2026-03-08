@@ -1,8 +1,7 @@
-"use client"
+import { redirect } from 'next/navigation'
 
-import { NextStudio } from 'next-sanity/studio'
-import config from '../../../sanity.config'
-
+// Sanity Studio fue reemplazado por Strapi CMS
+// Esta página redirige al panel de administración de Strapi
 export default function StudioPage() {
-    return <NextStudio config={config} />
+    redirect('https://api.bluechat.lat/admin')
 }
