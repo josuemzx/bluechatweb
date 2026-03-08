@@ -1,4 +1,11 @@
-User - agent: *
-    Allow: /
+import { MetadataRoute } from 'next';
 
-Sitemap: https://bluechat.lat/sitemap.xml
+export default function robots(): MetadataRoute.Robots {
+    return {
+        rules: {
+            userAgent: '*',
+            allow: '/',
+        },
+        sitemap: 'https://bluechat.lat/sitemap.xml',
+    };
+}
