@@ -28,7 +28,7 @@ export default function VideoSection() {
     };
 
     return (
-        <section ref={containerRef} className="relative w-full pt-2 pb-10 bg-white min-h-[80vh] flex flex-col items-center">
+        <section ref={containerRef} className="relative w-full pt-16 lg:pt-40 pb-6 lg:pb-10 bg-white lg:min-h-[80vh] flex flex-col items-center">
 
             {/* 
           Container for the video.
@@ -38,7 +38,7 @@ export default function VideoSection() {
 
                 <motion.div
                     style={{ scale: smoothScale }}
-                    className="relative aspect-video w-full rounded-[2.5rem] overflow-hidden bg-black shadow-2xl group cursor-none border border-gray-900/10"
+                    className="relative aspect-video w-full rounded-2xl lg:rounded-[3rem] overflow-hidden bg-black shadow-2xl group cursor-none border border-gray-900/10"
                     onMouseMove={handleMouseMove}
                     onClick={() => setIsVideoOpen(true)}
                 >

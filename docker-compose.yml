@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  bluechat-db:
+    image: postgres:16-alpine
+    container_name: bluechat-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-strapi}
+      POSTGRES_DB: ${DATABASE_NAME:-strapi}
+    volumes:
+      - bluechat_db_data:/var/lib/postgresql/data
+    networks:
+      - bluechat-network
+
+  bluechat-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bluechat-api
+    restart: always
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: bluechat-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-strapi}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-strapi}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-strapi}
+      NODE_ENV: production
+      STRAPI_URL: https://api.bluechat.lat
+    depends_on:
+      - bluechat-db
+    networks:
+      - bluechat-network
+    expose:
+      - 1337
+
+  bluechat-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bluechat-web
+    restart: always
+    environment:
+      NEXT_PUBLIC_STRAPI_URL: https://api.bluechat.lat
+      PORT: 3000
+    networks:
+      - bluechat-network
+    expose:
+      - 3000
+
+networks:
+  bluechat-network:
+    driver: bridge
+
+volumes:
+  bluechat_db_data:

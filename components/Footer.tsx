@@ -45,15 +45,15 @@ export default function Footer() {
                     {/* Right Column: Links (Spans 6 cols, starts at col 7 for Antigravity spacing) */}
                     <div className="lg:col-span-6 grid grid-cols-2 gap-8 sm:gap-16">
                         <div className="flex flex-col gap-3">
-                            <Link href="#" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Descargar</Link>
                             <Link href="/product" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Producto</Link>
-                            <Link href="#" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Documentación</Link>
-                            <Link href="#" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Cambios</Link>
+                            <Link href="https://developers.bluechat.lat" target="_blank" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Developers</Link>
+                            <Link href="https://app.bluechat.lat/hc/support/es" target="_blank" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Centro de ayuda</Link>
                             <Link href="#" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Prensa</Link>
                         </div>
                         <div className="flex flex-col gap-3">
                             <Link href="/blog" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Blog</Link>
                             <Link href="/pricing" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Precios</Link>
+                            <Link href="/soporte" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Soporte</Link>
                             <Link href="#" className="text-[14px] font-medium text-[#202124] hover:text-blue-600 transition-colors">Casos de uso</Link>
                         </div>
                     </div>

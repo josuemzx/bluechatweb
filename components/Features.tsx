@@ -32,11 +32,11 @@ export default function Features({ data }: FeaturesProps) {
         <section className="py-24 sm:py-32 bg-white">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
-                    <h2 className="text-base font-semibold leading-7 text-primary-500">Deploy faster</h2>
-                    <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    <h2 className="text-base font-semibold leading-7 text-black">Funcionalidades</h2>
+                    <p className="mt-2 text-3xl font-bold tracking-tight text-[#1c2024] sm:text-4xl">
                         {title}
                     </p>
-                    <p className="mt-6 text-lg leading-8 text-gray-600">
+                    <p className="mt-6 text-lg leading-8 text-[#5f6368]">
                         {description}
                     </p>
                 </div>
@@ -47,7 +47,7 @@ export default function Features({ data }: FeaturesProps) {
 
                             return (
                                 <div key={feature.id} className="flex flex-col items-start p-6 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all border border-gray-100 group">
-                                    <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-500 group-hover:scale-110 transition-transform">
+                                    <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-[#1a1a1a] group-hover:scale-110 transition-transform">
                                         <IconComponent className="h-6 w-6 text-white" aria-hidden="true" />
                                     </div>
                                     <dt className="text-xl font-semibold leading-7 text-gray-900">

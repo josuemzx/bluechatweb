@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 import InteractiveBackground from "@/components/InteractiveBackground";
 
 export default function HeroDefault() {
+    // ... (text and state logic remains the same)
     const line1Text = "Gestiona y mejora la atención";
     const line2Text = "a tus clientes desde ";
     const highlightText = "un solo lugar";
-
-
 
     const [charIndex, setCharIndex] = useState(0);
     const [isTypingComplete, setIsTypingComplete] = useState(false);
@@ -44,58 +46,46 @@ export default function HeroDefault() {
     const isFinished = charIndex >= totalLength;
 
     return (
-        <main className="bg-white overflow-hidden w-full flex flex-col items-center justify-start relative font-sans">
+        <Section padding="none" as="main" className="bg-white overflow-hidden w-full flex flex-col items-center justify-start relative font-sans">
             {/* Background Effect: Dynamic Particles */}
             <div className="absolute inset-0 pointer-events-auto z-0 h-full w-full">
                 <InteractiveBackground />
             </div>
 
             {/* Content Wrapper */}
-            <div className="relative hero-layout-width z-10 pointer-events-none">
-                {/* Pointer events none on container so clicks pass to canvas if needed, 
-                BUT interactive elements inside need pointer-events-auto */}
-
+            <Container className="relative z-10 pointer-events-none flex flex-col items-center pt-16 lg:pt-32">
                 {/* Logo */}
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0 }}
-                    className="flex justify-center mb-8 pointer-events-auto"
+                    className="flex justify-center mb-10 pointer-events-auto"
                 >
                     <div className="flex items-center gap-2">
-                        <img src="/logo2.png" alt="Bluechat" className="h-6 w-auto grayscale" />
+                        <img src="/logo2.png" alt="Bluechat" className="h-[28px] w-auto opacity-40 grayscale" />
+
                     </div>
                 </motion.div>
 
-                {/* Semantic Text Container */}
-                <div className="hero-text-cont relative pointer-events-auto">
-                    {/* Ghost Text */}
-                    <h1 className="hero-title-responsive text-balance invisible pointer-events-none select-none">
-                        <span className="block">
-                            {line1Text}
-                        </span>
-                        <span className="block mt-1 sm:mt-2">
-                            {line2Text}
-                            <span className="text-blue-600">{highlightText}</span>
-                        </span>
+                {/* Animated Text */}
+                <div className="relative pointer-events-auto w-full max-w-[900px] text-center">
+                    {/* Ghost Text for layout consistency */}
+                    <h1 className="text-[32px] md:text-[48px] lg:text-[52px] leading-[1.02] font-medium tracking-tight text-[#1a1a1b] invisible">
+                        {line1Text} {line2Text}
+                        <span className="text-bluechat-primary">{highlightText}</span>
                     </h1>
 
                     {/* Real Animated Text */}
-                    <h1 className="hero-title-responsive text-balance absolute top-0 left-0 w-full h-full z-10">
-                        <span className="block">
+                    <h1 className="text-[32px] md:text-[48px] lg:text-[52px] leading-[1.02] font-medium tracking-tight text-[#1a1a1b] absolute top-0 left-0 w-full h-full z-10">
+                        <span>
                             {visibleLine1}
-                            {isCursorOnLine1 && (
-                                <span className="hero-cursor"></span>
-                            )}
+                            {isCursorOnLine1 && <span className="hero-cursor"></span>}
                         </span>
-
-                        <span className="block mt-1 sm:mt-2">
+                        {" "}
+                        <span>
                             {visibleLine2}
-                            <span className="text-blue-600">{visibleHighlight}</span>
-
-                            {(isCursorOnLine2 || (isFinished && showCursor)) && (
-                                <span className="hero-cursor"></span>
-                            )}
+                            <span className="text-bluechat-primary">{visibleHighlight}</span>
+                            {(isCursorOnLine2 || (isFinished && showCursor)) && <span className="hero-cursor"></span>}
                         </span>
                     </h1>
                 </div>
@@ -103,24 +93,18 @@ export default function HeroDefault() {
                 {/* Buttons */}
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
-                    animate={isTypingComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    animate={isTypingComplete ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                    className="mt-6 pointer-events-auto"
+                    className="mt-12 pointer-events-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
                 >
-                    <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-                        {/* Primary Button */}
-                        <a href="https://app.bluechat.lat/auth/signup" className="hero-btn-primary group">
-                            Comienza tu prueba gratuita
-                        </a>
-
-                        {/* Secondary Button */}
-                        <a href="/product" className="hero-btn-secondary">
-                            Explorar casos de uso
-                        </a>
-                    </div>
+                    <Button href="/crear-cuenta" variant="primary" size="xl" className="px-10">
+                        Comienza tu prueba gratuita
+                    </Button>
+                    <Button href="/product" variant="outline" size="xl" className="px-10">
+                        Explorar casos de uso
+                    </Button>
                 </motion.div>
-
-            </div>
-        </main>
+            </Container>
+        </Section>
     );
 }

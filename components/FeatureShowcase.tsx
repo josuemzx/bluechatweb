@@ -2,6 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { Section } from "@/components/ui/Section";
+import { Container } from "@/components/ui/Container";
 
 interface FeatureShowcaseProps {
     title: string;
@@ -14,10 +16,9 @@ export default function FeatureShowcase({ title, description, videoSrc }: Featur
     const isInView = useInView(ref, { once: true, margin: "-80px" });
 
     return (
-        <section ref={ref} className="py-6 bg-white">
-            <div className="max-w-[1440px] mx-auto px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row lg:justify-between items-center gap-10 lg:gap-0">
-
+        <Section padding="none" className="py-8 lg:py-6 bg-white overflow-hidden">
+            <Container>
+                <div ref={ref} className="flex flex-col lg:flex-row lg:justify-between items-center gap-10 lg:gap-0">
                     {/* LEFT: Texto */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -25,10 +26,10 @@ export default function FeatureShowcase({ title, description, videoSrc }: Featur
                         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
                         className="w-full lg:w-[30%] lg:flex-shrink-0 flex flex-col gap-4"
                     >
-                        <h2 className="text-[28px] lg:text-[42px] leading-[1.04] tracking-[-0.73px] font-[450] text-[#121317]">
+                        <h2 className="text-[28px] lg:text-[42px] leading-[1.04] font-medium tracking-tight text-[#121317] font-sans">
                             {title}
                         </h2>
-                        <p className="text-[16px] lg:text-[17.5px] leading-[25px] tracking-[0.18px] font-normal text-[#45474D]">
+                        <p className="text-[16px] lg:text-[17.5px] leading-relaxed text-[#45474D]">
                             {description}
                         </p>
                     </motion.div>
@@ -49,9 +50,8 @@ export default function FeatureShowcase({ title, description, videoSrc }: Featur
                             playsInline
                         />
                     </motion.div>
-
                 </div>
-            </div>
-        </section>
+            </Container>
+        </Section>
     );
 }

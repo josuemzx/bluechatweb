@@ -43,19 +43,19 @@ const supportOptions = [
         title: "Facturación y pagos",
         description: "Consulta tus facturas, cambia de plan o actualiza tus métodos de pago.",
         label: "Ir al portal",
-        href: "https://bluechat.lat/portal-de-facturacion.html",
+        href: "/portal-de-facturacion",
     },
     {
-        id: "docs",
+        id: "hc",
         icon: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-8 h-8 text-black">
                 <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
             </svg>
         ),
-        title: "Documentación",
-        description: "Accede a la documentación de características y configuración.",
-        label: "Ver docs",
+        title: "Centro de ayuda",
+        description: "Accede a guías detalladas y tutoriales para usar Bluechat al máximo.",
+        label: "Ir al Centro de ayuda",
         href: "https://app.bluechat.lat/hc/support/es",
     },
 ];

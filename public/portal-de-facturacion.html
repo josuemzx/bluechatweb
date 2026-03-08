@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facturación de Bluechat</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0166FF;
+      --primary-dark: #0052cc;
+      --primary-light: #e6f0ff;
+      --success: #00a67d;
+      --success-light: #e6f7f3;
+      --warning: #c27803;
+      --warning-light: #fef6e6;
+      --danger: #cd3d64;
+      --danger-light: #fceef2;
+      --bg: #fff;
+      --card-bg: #ffffff;
+      --border: #e3e8ee;
+      --text-primary: #1a1f36;
+      --text-secondary: #697386;
+      --text-muted: #8792a2;
+      --shadow: 0 2px 5px 0 rgba(60, 66, 87, .08), 0 1px 1px 0 rgba(0, 0, 0, .12);
+      --shadow-lg: 0 7px 14px 0 rgba(60, 66, 87, .08), 0 3px 6px 0 rgba(0, 0, 0, .12);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Header - Solo visible en vistas internas */
+    .header {
+      width: 100%;
+      max-width: 1000px;
+      height: 60px;
+      display: none;
+      align-items: center;
+      margin-bottom: 32px;
+      background: transparent;
+      padding: 0 40px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .header.visible {
+      display: flex;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-img {
+      height: 32px;
+      width: auto;
+    }
+
+    .back-link {
+      display: none;
+    }
+
+    .back-link svg {
+      display: none;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    /* Page Title */
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    /* Cards - Stripe style */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card+.card {
+      margin-top: 24px;
+    }
+
+    .card-section {
+      padding: 24px;
+    }
+
+    .card-section+.card-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    /* Login Card */
+    .login-card {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .login-header {
+      text-align: center;
+      padding: 32px 32px 0;
+    }
+
+    .login-logo {
+      margin-bottom: 24px;
+    }
+
+    .login-logo img {
+      height: 32px;
+    }
+
+    .login-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .login-body {
+      padding: 32px;
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: var(--card-bg);
+      color: var(--text-primary);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(1, 102, 255, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Buttons - Stripe style */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-primary:disabled {
+      background: #a3c7ff;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg);
+    }
+
+    .btn-danger {
+      background: var(--card-bg);
+      color: var(--danger);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-light);
+      border-color: var(--danger);
+    }
+
+    .btn-link {
+      background: transparent;
+      color: var(--primary);
+      padding: 0;
+      font-weight: 500;
+    }
+
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Alerts - Stripe style */
+    .alert {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .alert-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
+
+    .alert-success {
+      background: var(--success-light);
+      color: #0d5c46;
+    }
+
+    .alert-warning {
+      background: var(--warning-light);
+      color: #7a4d00;
+    }
+
+    .alert-error {
+      background: var(--danger-light);
+      color: #822d49;
+    }
+
+    .alert-info {
+      background: var(--primary-light);
+      color: #0046ad;
+    }
+
+    /* Status Badge - Stripe style */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: var(--success-light);
+      color: #0d5c46;
+    }
+
+    .badge-danger {
+      background: var(--danger-light);
+      color: #822d49;
+    }
+
+    .badge-warning {
+      background: var(--warning-light);
+      color: #7a4d00;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Info Row - Stripe style */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+    }
+
+    .info-row+.info-row {
+      border-top: 1px solid var(--border);
+    }
+
+    .info-label {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .info-value {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 14px;
+      text-align: right;
+    }
+
+    /* Plan Display */
+    .plan-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .plan-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .plan-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-light);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plan-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--primary);
+    }
+
+    .plan-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .plan-price {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Plan Cards for selection */
+    .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .plan-option {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .plan-option:hover {
+      border-color: var(--primary);
+    }
+
+    .plan-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .plan-option.current {
+      border-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .plan-option-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .plan-option-info p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .plan-option-price {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .current-tag {
+      font-size: 11px;
+      background: var(--success);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    /* Actions */
+    .actions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .action-item+.action-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .action-label {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .action-sublabel {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Para hacer el botón más compacto y que no se solape */
+    .action-item .btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Modal - Stripe style */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 31, 54, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      max-width: 440px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 24px 24px 0;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 16px 24px 24px;
+    }
+
+    .modal-text {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    /* Hidden */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 1040px) {
+      .container {
+        padding: 0 20px;
+      }
+
+      .header {
+        padding: 0 20px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 0;
+      }
+
+      .header {
+        padding: 0 20px;
+        margin-bottom: 20px;
+      }
+
+      .card-section {
+        padding: 20px 16px;
+      }
+
+      .login-card {
+        margin: 0 auto;
+      }
+
+      .login-header,
+      .login-body {
+        padding: 24px 20px;
+      }
+
+      .login-header {
+        padding-bottom: 0;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+
+      .modal-footer {
+        flex-direction: column-reverse;
+      }
+
+      .modal-footer .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER - Transparente solo en vistas internas -->
+  <header class="header" id="main-header">
+    <div class="header-content">
+      <div class="logo">
+        <img src="/logo.png" alt="Bluechat" class="logo-img">
+      </div>
+    </div>
+  </header>
+
+  <!-- LOGIN VIEW -->
+  <div id="login-view">
+    <div class="container">
+      <div class="login-card card">
+        <div class="login-header">
+          <div class="login-logo">
+            <img src="/logo.png" alt="Bluechat">
+          </div>
+          <h1 class="login-title">Inicia sesión para gestionar tu cuenta</h1>
+          <p class="login-subtitle">Introduce tu correo electrónico y te enviaremos un enlace directamente al portal de
+            clientes.</p>
+        </div>
+        <div class="login-body">
+          <div id="login-alert" class="alert hidden"></div>
+
+          <form id="login-form">
+            <div class="form-group">
+              <label class="form-label" for="email">Correo electrónico</label>
+              <input type="email" id="email" class="form-input" placeholder="nombre@empresa.com" required
+                autocomplete="email">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+              <span id="login-btn-text">Enviar</span>
+              <div id="login-spinner" class="spinner hidden"></div>
+            </button>
+          </form>
+
+          <div class="footer">
+            ¿No tienes cuenta? <a href="https://bluechat.lat/crear-cuenta/">Crear cuenta</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL SENT VIEW -->
+  <div id="email-sent-view" class="hidden">
+    <div class="container">
+      <div class="login-card card">
+        <div class="login-header">
+          <div class="login-logo">
+            <img src="/logo.png" alt="Bluechat">
+          </div>
+          <h1 class="login-title">Revisa tu correo</h1>
+          <p class="login-subtitle">Enviamos un enlace de acceso a <strong id="sent-email"></strong></p>
+        </div>
+        <div class="login-body">
+          <div class="alert alert-info">
+            <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>El enlace expira en 30 minutos. Revisa spam si no lo encuentras.</div>
+          </div>
+
+          <button class="btn btn-secondary btn-block" onclick="showView('login')">
+            Volver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD VIEW -->
+  <div id="dashboard-view" class="hidden">
+    <div class="container">
+      <h1 class="page-title" id="welcome-title">Hola</h1>
+      <p class="page-subtitle">Administra tu suscripción y facturación</p>
+
+      <div id="dashboard-alert" class="alert hidden"></div>
+
+      <!-- Current Plan -->
+      <div class="card">
+        <div class="card-section">
+          <div class="section-title">Plan actual</div>
+          <div class="plan-display">
+            <div class="plan-info">
+              <div class="plan-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <div class="plan-name">Plan <span id="plan-name">-</span></div>
+                <div class="plan-price" id="plan-price">-</div>
+              </div>
+            </div>
+            <div id="status-badge" class="badge badge-success">
+              <span class="badge-dot"></span>
+              <span id="status-text">Activo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-section">
+          <div class="info-row">
+            <span class="info-label">Empresa</span>
+            <span class="info-value" id="empresa-name">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Próximo cobro</span>
+            <span class="info-value" id="next-billing">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Cliente desde</span>
+            <span class="info-value" id="member-since">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card">
+        <div class="card-section">
+          <div class="section-title">Gestionar suscripción</div>
+
+          <!-- BOTÓN REALIZAR PAGO - SOLO CUANDO ESTADO ES PENDING -->
+          <div class="action-item hidden" id="action-realizar-pago">
+            <div style="flex: 1; min-width: 280px;">
+              <div class="action-label">Completar pago pendiente</div>
+              <div class="action-sublabel">Tu suscripción está pendiente de aprobación</div>
+            </div>
+            <button class="btn btn-primary" onclick="realizarPago()">Realizar Pago</button>
+          </div>
+
+          <div class="action-item" id="action-change-plan">
+            <div style="flex: 1; min-width: 280px;">
+              <div class="action-label">Cambiar plan</div>
+              <div class="action-sublabel">Actualiza o cambia tu plan actual</div>
+            </div>
+            <button class="btn btn-secondary" onclick="showChangePlan()">Cambiar</button>
+          </div>
+
+          <div class="action-item hidden" id="action-reactivate">
+            <div style="flex: 1; min-width: 280px;">
+              <div class="action-label">Reactivar suscripción</div>
+              <div class="action-sublabel">Reactiva tu cuenta para seguir usando Bluechat</div>
+            </div>
+            <button class="btn btn-primary" onclick="showReactivateModal()">Reactivar</button>
+          </div>
+
+          <div class="action-item" id="action-cancel">
+            <div style="flex: 1; min-width: 280px;">
+              <div class="action-label">Cancelar suscripción</div>
+              <div class="action-sublabel">Tu cuenta se suspenderá inmediatamente</div>
+            </div>
+            <button class="btn btn-danger" onclick="showCancelModal()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Go to App -->
+      <div class="card" id="card-go-app">
+        <div class="card-section" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div class="action-label">Ir a Bluechat CRM</div>
+            <div class="action-sublabel">Accede a tu cuenta</div>
+          </div>
+          <a href="https://app.bluechat.lat" class="btn btn-primary">Abrir Bluechat</a>
+        </div>
+      </div>
+
+      <div class="footer">
+        ¿Necesitas ayuda? <a href="https://wa.me/51993014085">Contáctanos por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE PLAN VIEW -->
+  <div id="change-plan-view" class="hidden">
+    <div class="container">
+      <h1 class="page-title">Cambiar plan</h1>
+      <p class="page-subtitle">Selecciona tu nuevo plan</p>
+
+      <div id="change-plan-alert" class="alert hidden"></div>
+
+      <div class="card">
+        <div class="card-section">
+          <div class="plans-list" id="plans-list">
+            <div class="plan-option" data-plan="STARTER" onclick="selectPlan('STARTER')">
+              <div class="plan-option-info">
+                <h4>Starter</h4>
+                <p>Ideal para pequeños negocios</p>
+              </div>
+              <div class="plan-option-price">$25/mes</div>
+            </div>
+
+            <div class="plan-option" data-plan="PREMIUM" onclick="selectPlan('PREMIUM')">
+              <div class="plan-option-info">
+                <h4>Premium</h4>
+                <p>Ahorra 2 meses • Soporte prioritario</p>
+              </div>
+              <div class="plan-option-price">$99/año</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-section" style="display: flex; gap: 12px;">
+          <button class="btn btn-secondary" onclick="showView('dashboard')" style="flex: 1;">Cancelar</button>
+          <button class="btn btn-primary" id="btn-confirm-plan" onclick="changePlan()" disabled style="flex: 2;">
+            <span id="change-plan-btn-text">Selecciona un plan</span>
+            <div id="change-plan-spinner" class="spinner hidden"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING VIEW -->
+  <div id="loading-view" class="hidden">
+    <div class="container">
+      <div class="login-card card">
+        <div class="login-body" style="text-align: center; padding: 60px 32px;">
+          <div class="spinner"
+            style="width: 32px; height: 32px; margin: 0 auto 16px; border-width: 3px; border-top-color: var(--primary);">
+          </div>
+          <p style="color: var(--text-secondary);">Cargando información...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Modal -->
+  <div id="cancel-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">¿Cancelar suscripción?</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Tu cuenta será suspendida inmediatamente y perderás acceso a Bluechat CRM. Podrás reactivarla en cualquier
+          momento.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('cancel-modal')">No, mantener</button>
+        <button class="btn btn-danger" id="btn-confirm-cancel" onclick="cancelSubscription()">
+          <span id="cancel-btn-text">Cancelar suscripción</span>
+          <div id="cancel-spinner" class="spinner hidden"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reactivate Modal -->
+  <div id="reactivate-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Reactivar suscripción</h2>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Tu cuenta será reactivada y podrás acceder nuevamente a Bluechat CRM con todas tus conversaciones y
+          configuraciones.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('reactivate-modal')">Cancelar</button>
+        <button class="btn btn-primary" id="btn-confirm-reactivate" onclick="reactivateSubscription()">
+          <span id="reactivate-btn-text">Reactivar ahora</span>
+          <div id="reactivate-spinner" class="spinner hidden"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const API_BASE = 'https://n8n.bluechat.lat/webhook';
+
+    // State
+    let currentToken = null;
+    let currentData = null;
+    let selectedPlan = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+
+      if (token) {
+        currentToken = token;
+        loadDashboard();
+      } else {
+        showView('login');
+      }
+
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+    });
+
+    // View Management
+    function showView(viewName) {
+      const views = ['login-view', 'email-sent-view', 'dashboard-view', 'change-plan-view', 'loading-view'];
+      views.forEach(v => document.getElementById(v).classList.add('hidden'));
+      document.getElementById(`${viewName}-view`).classList.remove('hidden');
+
+      // Mostrar/ocultar header
+      const header = document.getElementById('main-header');
+      if (viewName === 'dashboard' || viewName === 'change-plan') {
+        header.classList.add('visible');
+      } else {
+        header.classList.remove('visible');
+      }
+    }
+
+    function showAlert(containerId, type, message) {
+      const alert = document.getElementById(containerId);
+      alert.className = `alert alert-${type}`;
+      alert.innerHTML = `
+        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${getAlertIcon(type)}"/>
+        </svg>
+        <div>${message}</div>
+      `;
+      alert.classList.remove('hidden');
+    }
+
+    function hideAlert(containerId) {
+      document.getElementById(containerId).classList.add('hidden');
+    }
+
+    function getAlertIcon(type) {
+      const icons = {
+        success: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+        error: 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z',
+        warning: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z',
+        info: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+      };
+      return icons[type] || icons.info;
+    }
+
+    // Login Handler
+    async function handleLogin(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const btn = document.getElementById('login-btn');
+      const btnText = document.getElementById('login-btn-text');
+      const spinner = document.getElementById('login-spinner');
+
+      btn.disabled = true;
+      btnText.textContent = 'Enviando...';
+      spinner.classList.remove('hidden');
+      hideAlert('login-alert');
+
+      try {
+        const response = await fetch(`${API_BASE}/portal-solicitar-acceso`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('sent-email').textContent = email;
+          showView('email-sent');
+        } else {
+          showAlert('login-alert', 'error', data.message || 'Error al enviar el enlace');
+        }
+      } catch (error) {
+        showAlert('login-alert', 'error', 'Error de conexión. Intenta de nuevo.');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Continuar';
+        spinner.classList.add('hidden');
+      }
+    }
+
+    // Load Dashboard
+    async function loadDashboard() {
+      showView('loading');
+
+      try {
+        console.log('Cargando dashboard con token:', currentToken.substring(0, 20) + '...');
+
+        const response = await fetch(`${API_BASE}/portal-consultar-estado`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: currentToken })
+        });
+
+        const data = await response.json();
+
+        console.log('Respuesta de n8n:', data);
+
+        if (data.success && data.cliente) {
+          currentData = data;
+          console.log('Datos recibidos, renderizando dashboard...');
+          renderDashboard(data);
+          showView('dashboard');
+        } else {
+          console.error('Error en respuesta:', data);
+          showAlert('login-alert', 'error', data.error || 'Enlace inválido o expirado');
+          showView('login');
+        }
+      } catch (error) {
+        console.error('Error de conexión:', error);
+        showAlert('login-alert', 'error', 'Error de conexión. Intenta de nuevo.');
+        showView('login');
+      }
+    }
+
+    // Render Dashboard
+    function renderDashboard(data) {
+      const { cliente, suscripcion, acciones } = data;
+
+      // Welcome
+      const firstName = (cliente.Nombre || cliente.nombre || 'Usuario').split(' ')[0];
+      document.getElementById('welcome-title').textContent = `Hola, ${firstName}`;
+
+      // Plan info
+      console.log('--- DATA RECIBIDA DE LA BD ---', data);
+
+      const plan = cliente.Plan || cliente.plan || '-';
+
+      // BUSQUEDA ROBUSTA DE LA COLUMNA DE PRECIO
+      let rawPrice = '';
+      const allKeys = Object.keys(cliente);
+      const targetPriceKey = allKeys.find(k =>
+        k.toLowerCase().trim() === 'price' ||
+        k.toLowerCase().trim() === '$ price' ||
+        k.toLowerCase().includes('price')
+      );
+
+      if (targetPriceKey) {
+        rawPrice = cliente[targetPriceKey];
+        console.log(`Columna detectada: "${targetPriceKey}". Valor crudo:`, rawPrice);
+      }
+
+      // Función para extraer el número de cualquier formato (NocoDB puede enviar objeto para moneda)
+      function extractValue(val) {
+        if (val === undefined || val === null || val === '') return NaN;
+        if (typeof val === 'number') return val;
+        if (typeof val === 'object') {
+          // Si NocoDB envía un objeto de moneda {amount: 32, currency: 'USD'}
+          return extractValue(val.amount || val.value || val.total || val.Price || val.price);
+        }
+        // Si es un string con "$32.00"
+        return parseFloat(val.toString().replace(/[^0-9.]/g, ''));
+      }
+
+      const numericPrice = extractValue(rawPrice);
+      let priceDisplay = '';
+
+      if (!isNaN(numericPrice)) {
+        const period = plan.toLowerCase().includes('premium') ? '/año' : '/mes';
+        priceDisplay = `$${numericPrice.toFixed(2)}${period}`;
+      } else {
+        // Fallback si no es un numero (ej. texto "Gratis" o vacio)
+        priceDisplay = rawPrice || '-';
+      }
+
+      document.getElementById('plan-name').textContent = plan;
+      document.getElementById('plan-price').textContent = priceDisplay;
+      document.getElementById('empresa-name').textContent = cliente.Nombre || cliente.nombre || cliente.empresa || '-';
+
+      // Status
+      const statusBadge = document.getElementById('status-badge');
+      const statusText = document.getElementById('status-text');
+
+      statusBadge.className = 'badge';
+
+      let estadoKey = suscripcion.estado || '';
+
+      switch (estadoKey) {
+        case 'ACTIVE':
+          statusBadge.classList.add('badge-success');
+          statusText.textContent = 'Activo';
+          break;
+        case 'SUSPENDED':
+        case 'CANCELLED':
+          statusBadge.classList.add('badge-danger');
+          statusText.textContent = estadoKey === 'SUSPENDED' ? 'Suspendido' : 'Cancelado';
+          break;
+        case 'APPROVAL_PENDING':
+          statusBadge.classList.add('badge-warning');
+          statusText.textContent = 'Pendiente';
+          break;
+        case 'PENDING':
+          statusBadge.classList.add('badge-warning');
+          statusText.textContent = 'Pendiente de Pago';
+          break;
+        default:
+          statusBadge.classList.add('badge-warning');
+          statusText.textContent = suscripcion.estadoTexto || estadoKey;
+      }
+
+      // Next billing
+      if (suscripcion.proximoCobro) {
+        const date = new Date(suscripcion.proximoCobro);
+        document.getElementById('next-billing').textContent = date.toLocaleDateString('es-PE', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      } else {
+        document.getElementById('next-billing').textContent = '-';
+      }
+
+      // Member since
+      if (cliente.fechaCreacion) {
+        const date = new Date(cliente.fechaCreacion);
+        document.getElementById('member-since').textContent = date.toLocaleDateString('es-PE', {
+          year: 'numeric',
+          month: 'long'
+        });
+      }
+
+      // Actions visibility
+      document.getElementById('action-change-plan').classList.toggle('hidden', !acciones.puedeCambiarPlan);
+      document.getElementById('action-cancel').classList.toggle('hidden', !acciones.puedeCancelar);
+      document.getElementById('action-reactivate').classList.toggle('hidden', !acciones.puedeReactivar);
+
+      // MOSTRAR BOTÓN REALIZAR PAGO SOLO SI ESTADO ES PENDING Y HAY URL
+      const tieneEstadoPending = estadoKey === 'PENDING' || estadoKey === 'APPROVAL_PENDING';
+      const tieneUrl = suscripcion.urlPayPalAprovacion && suscripcion.urlPayPalAprovacion.trim().length > 0;
+      document.getElementById('action-realizar-pago').classList.toggle('hidden', !(tieneEstadoPending && tieneUrl));
+
+      // If suspended, hide go to app
+      if (estadoKey !== 'ACTIVE') {
+        document.getElementById('card-go-app').classList.add('hidden');
+      }
+    }
+
+    // NUEVA FUNCIÓN: Realizar Pago
+    function realizarPago() {
+      if (!currentData || !currentData.suscripcion || !currentData.suscripcion.urlPayPalAprovacion) {
+        showAlert('dashboard-alert', 'error', 'No se encontró la URL de pago');
+        return;
+      }
+
+      const url = currentData.suscripcion.urlPayPalAprovacion.trim();
+      if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        window.location.href = url;
+      } else {
+        showAlert('dashboard-alert', 'error', 'URL de pago inválida');
+      }
+    }
+
+    // Change Plan
+    function showChangePlan() {
+      selectedPlan = null;
+      const currentPlan = (currentData?.cliente?.Plan || currentData?.cliente?.plan || '').toUpperCase();
+
+      document.querySelectorAll('.plan-option').forEach(card => {
+        card.classList.remove('selected', 'current');
+        const existingTag = card.querySelector('.current-tag');
+        if (existingTag) existingTag.remove();
+
+        if (card.dataset.plan === currentPlan) {
+          card.classList.add('current');
+          const tag = document.createElement('span');
+          tag.className = 'current-tag';
+          tag.textContent = 'Actual';
+          card.querySelector('.plan-option-info h4').appendChild(tag);
+        }
+      });
+
+      document.getElementById('btn-confirm-plan').disabled = true;
+      document.getElementById('change-plan-btn-text').textContent = 'Selecciona un plan';
+      showView('change-plan');
+    }
+
+    function selectPlan(plan) {
+      const currentPlan = (currentData?.cliente?.plan || '').toUpperCase();
+      if (plan === currentPlan) return;
+
+      selectedPlan = plan;
+      document.querySelectorAll('.plan-option').forEach(card => {
+        card.classList.remove('selected');
+        if (card.dataset.plan === plan) {
+          card.classList.add('selected');
+        }
+      });
+
+      document.getElementById('btn-confirm-plan').disabled = false;
+      document.getElementById('change-plan-btn-text').textContent = `Cambiar a ${plan}`;
+    }
+
+    async function changePlan() {
+      if (!selectedPlan || !currentToken) return;
+
+      const btn = document.getElementById('btn-confirm-plan');
+      const btnText = document.getElementById('change-plan-btn-text');
+      const spinner = document.getElementById('change-plan-spinner');
+
+      btn.disabled = true;
+      btnText.textContent = 'Procesando...';
+      spinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch(`${API_BASE}/portal-cambiar-plan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: currentToken, plan: selectedPlan })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          if (data.approvalUrl) {
+            window.location.href = data.approvalUrl;
+          } else {
+            showAlert('dashboard-alert', 'success', '¡Plan cambiado exitosamente!');
+            loadDashboard();
+          }
+        } else {
+          showAlert('change-plan-alert', 'error', data.error || 'Error al cambiar el plan');
+        }
+      } catch (error) {
+        showAlert('change-plan-alert', 'error', 'Error de conexión. Intenta de nuevo.');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = `Cambiar a ${selectedPlan}`;
+        spinner.classList.add('hidden');
+      }
+    }
+
+    // Cancel Subscription
+    function showCancelModal() {
+      document.getElementById('cancel-modal').classList.add('active');
+    }
+
+    async function cancelSubscription() {
+      const btn = document.getElementById('btn-confirm-cancel');
+      const btnText = document.getElementById('cancel-btn-text');
+      const spinner = document.getElementById('cancel-spinner');
+
+      btn.disabled = true;
+      btnText.textContent = 'Cancelando...';
+      spinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch(`${API_BASE}/portal-cancelar-suscripcion`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: currentToken })
+        });
+
+        const data = await response.json();
+
+        closeModal('cancel-modal');
+
+        if (data.success) {
+          showAlert('dashboard-alert', 'success', 'Suscripción cancelada. Esperamos verte pronto.');
+          loadDashboard();
+        } else {
+          showAlert('dashboard-alert', 'error', data.error || 'Error al cancelar');
+        }
+      } catch (error) {
+        closeModal('cancel-modal');
+        showAlert('dashboard-alert', 'error', 'Error de conexión. Intenta de nuevo.');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Cancelar suscripción';
+        spinner.classList.add('hidden');
+      }
+    }
+
+    // Reactivate Subscription
+    function showReactivateModal() {
+      document.getElementById('reactivate-modal').classList.add('active');
+    }
+
+    async function reactivateSubscription() {
+      const btn = document.getElementById('btn-confirm-reactivate');
+      const btnText = document.getElementById('reactivate-btn-text');
+      const spinner = document.getElementById('reactivate-spinner');
+
+      btn.disabled = true;
+      btnText.textContent = 'Reactivando...';
+      spinner.classList.remove('hidden');
+
+      try {
+        const response = await fetch(`${API_BASE}/portal-reactivar-suscripcion`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: currentToken })
+        });
+
+        const data = await response.json();
+
+        closeModal('reactivate-modal');
+
+        if (data.approvalUrl) {
+          window.location.href = data.approvalUrl;
+        } else if (data.success || data.action === 'reactivated') {
+          showAlert('dashboard-alert', 'success', '¡Suscripción reactivada!');
+          loadDashboard();
+        } else if (data.needsNewSubscription) {
+          showAlert('dashboard-alert', 'warning', data.message);
+        } else {
+          showAlert('dashboard-alert', 'error', data.error || data.message || 'Error al reactivar');
+        }
+      } catch (error) {
+        closeModal('reactivate-modal');
+        showAlert('dashboard-alert', 'error', 'Error de conexión. Intenta de nuevo.');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Reactivar ahora';
+        spinner.classList.add('hidden');
+      }
+    }
+
+    // Modal management
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

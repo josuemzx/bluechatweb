@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowDownIcon } from "@heroicons/react/24/outline";
-import { motion } from "framer-motion";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
+import { Section } from "@/components/ui/Section";
 
 export default function ProductHero() {
     const text = "Todas tus conversaciones en un solo lugar";
@@ -27,16 +29,14 @@ export default function ProductHero() {
     }, []);
 
     return (
-        <section className="relative w-full min-h-[80vh] flex items-center bg-white pt-8 overflow-hidden">
-
-            <div className="max-w-[1440px] mx-auto w-full px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-[35%_65%] gap-12 items-center">
+        <Section padding="none" className="relative min-h-[80vh] flex items-center bg-white pt-8 overflow-hidden">
+            <Container className="grid grid-cols-1 lg:grid-cols-[35%_65%] gap-12 items-center">
                 {/* Left Side: Typewriter Text & Buttons */}
                 <div className="flex flex-col items-start gap-8 z-10 w-full">
                     <h1 className="text-4xl sm:text-5xl lg:text-[2.2rem] leading-[1.1] font-medium tracking-tight text-[#202124] font-sans h-auto">
-                        {/* Height constraints prevent layout shift during typing */}
                         {displayedText}
                         {!isTypingComplete && (
-                            <span className="inline-block w-1 h-[0.9em] bg-blue-500 ml-1 animate-pulse align-middle"></span>
+                            <span className="inline-block w-1 h-[0.9em] bg-black ml-1 animate-pulse align-middle"></span>
                         )}
                         {isTypingComplete && (
                             <span className="inline-block w-1 h-[0.9em] bg-transparent ml-1 align-middle"></span>
@@ -50,20 +50,20 @@ export default function ProductHero() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="flex flex-wrap gap-4 mt-2"
                     >
-                        <button className="rounded-full bg-[#202124] px-8 py-4 text-[15px] font-medium text-white hover:bg-black transition-all flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                        <Button variant="primary" size="xl">
                             Empieza gratis
-                        </button>
-                        <button className="rounded-full bg-[#f1f3f4] px-8 py-4 text-[15px] font-medium text-[#202124] hover:bg-[#e8eaed] transition-colors flex items-center gap-2">
+                        </Button>
+                        <Button variant="outline" size="xl">
                             Explorar casos de uso
-                        </button>
+                        </Button>
                     </motion.div>
                 </div>
 
-                {/* Right Side: Image Placeholder */}
+                {/* Right Side: Image Workspace */}
                 <div className="relative w-full flex items-center justify-center">
-                    <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+                    <div className="w-full rounded-2xl overflow-hidden border border-gray-100/60">
                         <Image
-                            src="/panel-principal.png"
+                            src="/slider-principal.jpg"
                             alt="Panel principal de Bluechat"
                             width={1440}
                             height={900}
@@ -72,8 +72,7 @@ export default function ProductHero() {
                         />
                     </div>
                 </div>
-
-            </div>
-        </section>
+            </Container>
+        </Section>
     );
 }

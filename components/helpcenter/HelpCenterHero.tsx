@@ -25,7 +25,7 @@ export default function HelpCenterHero() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center rounded-full border border-gray-300 bg-white/80 backdrop-blur-sm px-8 py-3 text-[15px] font-medium text-gray-900 hover:bg-google-surface transition-all duration-200"
                 >
-                    Ver documentación
+                    Ir al Centro de ayuda
                 </Link>
             </div>
         </section>

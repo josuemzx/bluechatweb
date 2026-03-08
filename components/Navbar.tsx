@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button } from '@/components/ui/Button';
 
 const navigation = [
     { name: 'Producto', href: '/product' },
@@ -64,12 +65,13 @@ export default function Navbar() {
                     >
                         Iniciar sesión
                     </Link>
-                    <Link
-                        href="https://bluechat.lat/crear-cuenta/"
-                        className="rounded-full bg-[#202124] px-5 py-2 text-[14px] font-medium text-white shadow-sm hover:bg-gray-800 transition-all flex items-center gap-2"
+                    <Button
+                        href="/crear-cuenta"
+                        variant="primary"
+                        size="md"
                     >
                         Crear cuenta
-                    </Link>
+                    </Button>
                 </div>
             </nav>
 
@@ -121,13 +123,15 @@ export default function Navbar() {
                                     >
                                         Iniciar sesión
                                     </Link>
-                                    <Link
-                                        href="https://bluechat.lat/crear-cuenta/"
-                                        className="block w-full text-center rounded-full bg-[#202124] px-3 py-4 text-xl font-medium leading-7 text-white shadow-sm hover:bg-gray-800 transition-all"
+                                    <Button
+                                        href="/crear-cuenta"
+                                        variant="primary"
+                                        size="lg"
+                                        className="w-full"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
                                         Crear cuenta
-                                    </Link>
+                                    </Button>
                                 </div>
                             </div>
                         </div>

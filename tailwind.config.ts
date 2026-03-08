@@ -15,6 +15,9 @@ const config: Config = {
         'google-surface': '#f1f3f4',         // Cards / Pills background
         'google-surface-hover': '#e8eaed',
         'google-blue': '#1a73e8',            // Links / Accents
+        'bluechat-primary': '#0166FF',      // Brand Primary
+        'bluechat-surface': '#FCFCFC',      // Light Card Background
+        'bluechat-surface-alt': '#F9FAFB',  // Subtle Gray Background
 
         // Help Center card tokens
         'hc-card': '#f8f9fc',               // Card base background
