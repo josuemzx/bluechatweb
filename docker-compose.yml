@@ -31,6 +31,8 @@ services:
       STRAPI_URL: https://api.bluechat.lat
     depends_on:
       - bluechat-db
+    volumes:
+      - bluechat_uploads:/opt/app/public/uploads
     networks:
       - bluechat-network
     expose:
@@ -56,3 +58,4 @@ networks:
 
 volumes:
   bluechat_db_data:
+  bluechat_uploads:

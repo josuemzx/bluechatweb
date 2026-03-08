@@ -23,3 +23,13 @@ Thumbs.db
 .vscode/
 .idea/
 
+.Zone.Identifier
+
+# Variables de entorno (NUNCA al repositorio)
+.env
+.env.local
+.env*.local
+backend/.env
+
+# Respaldo de base de datos (subir manualmente al VPS)
+datos-respaldo.tar.gz
