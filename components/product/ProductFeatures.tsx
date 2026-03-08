@@ -9,18 +9,18 @@ import {
 
 const features = [
     {
-        title: "Evolving to agent-first",
-        description: "Introducing a new agent-first Agent Manager experience. This innovative approach enables agents to operate seamlessly across all surfaces, including your browser.",
+        title: "Conversaciones en un solo lugar",
+        description: "Centraliza WhatsApp, Instagram, Facebook y el chat de tu sitio web en una sola plataforma. Responde a todos tus clientes desde un único panel.",
         icon: Squares2X2Icon,
     },
     {
-        title: "A more natural abstraction",
-        description: "Gain a complete understanding of agentic operations at the task level, supported by the essential artifacts and verification outcomes, fostering confidence.",
+        title: "Trabajo en equipo",
+        description: "Asigna conversaciones, colabora entre agentes y mantén el historial completo de cada cliente para que tu equipo trabaje organizado.",
         icon: CubeIcon,
     },
     {
-        title: "Guidance to go from 90% to 100%",
-        description: "Intuitively provide feedback across every surface and Artifact to steer the agent to your desired outcomes.",
+        title: "Automatización inteligente",
+        description: "Usa respuestas automáticas, etiquetas y flujos inteligentes para atender más clientes y convertir conversaciones en ventas.",
         icon: SparklesIcon,
     },
 ];
