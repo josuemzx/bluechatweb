@@ -4,12 +4,11 @@ services:
     container_name: bluechat-db
     restart: always
     environment:
-      POSTGRES_USER: ${DATABASE_USERNAME:-strapi}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-strapi}
-      POSTGRES_DB: ${DATABASE_NAME:-strapi}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - bluechat_db_data:/var/lib/postgresql/data
-    # NO exponemos el puerto al host. Solo accesible dentro de la red Docker interna.
     networks:
       - bluechat-network
 
@@ -23,9 +22,9 @@ services:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: bluechat-db
       DATABASE_PORT: 5432
-      DATABASE_NAME: ${DATABASE_NAME:-strapi}
-      DATABASE_USERNAME: ${DATABASE_USERNAME:-strapi}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-strapi}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       NODE_ENV: production
       STRAPI_URL: https://api.bluechat.lat
     depends_on:
@@ -34,7 +33,6 @@ services:
       - bluechat_uploads:/opt/app/public/uploads
     networks:
       - bluechat-network
-    # Puerto 1337 del host -> 1337 del container (libre en el VPS)
     ports:
       - "127.0.0.1:1337:1337"
 
@@ -49,7 +47,6 @@ services:
       PORT: 3000
     networks:
       - bluechat-network
-    # Puerto 3002 del host -> 3000 del container (3000 está ocupado por Flowise)
     ports:
       - "127.0.0.1:3002:3000"
 
