@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 const GA_ID = 'G-EBDYYBPLLJ';
 
@@ -39,7 +36,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="es" className="scroll-smooth">
-            <body className={`${inter.variable} font-sans antialiased text-gray-900 bg-white selection:bg-primary-100 selection:text-primary-900`}>
+            <body className="font-sans antialiased text-gray-900 bg-white selection:bg-primary-100 selection:text-primary-900">
                 {/* Google Analytics */}
                 <Script
                     src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
