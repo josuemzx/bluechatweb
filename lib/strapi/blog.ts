@@ -106,8 +106,16 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 function processSingleItem(item: any): BlogPost {
     const attr = item.attributes || item;
 
-    // RESILIENCIA: Si el slug es nulo, usamos el documentId para que no se rompa el enlace
-    const finalSlug = attr.slug || item.documentId || item.id?.toString();
+    // RESILIENCIA: Si el slug es nulo o es el string "null", usamos el documentId o ID
+    let finalSlug = attr.slug || item.documentId || item.id?.toString();
+
+    // Verificación adicional para evitar la palabra literal "null"
+    if (finalSlug === "null" || !finalSlug) {
+        finalSlug = item.documentId || item.id?.toString();
+    }
+
+    // Log para depuración en el servidor (visible con docker logs)
+    console.log(`[STRAPI DEBUG] Article ID: ${item.id}, Title: "${attr.title}", Final Slug: "${finalSlug}"`);
 
     return {
         id: item.id,
