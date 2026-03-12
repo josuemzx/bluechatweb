@@ -56,10 +56,11 @@ export async function getCategories(): Promise<string[]> {
 }
 
 /**
- * Obtiene un artículo individual por Slug real.
+ * Obtiene un artículo individual por Slug real o DocumentId (fallback).
  */
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
+        // 1. Intentar por SLUG
         let url = `${STRAPI_URL}/api/articles?filters[slug][$eq]=${slug}&populate=*`;
         let res = await fetch(url, { headers: { 'Content-Type': 'application/json', ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}) }, next: { revalidate: 60 } });
         let json = await res.json();
@@ -68,7 +69,16 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
             return processSingleItem(json.data[0]);
         }
 
-        // Fallback: Escaneo manual si el filtro falla
+        // 2. Fallback: Intentar por documentId (si el slug parece un id o el anterior fallo)
+        let urlDoc = `${STRAPI_URL}/api/articles?filters[documentId][$eq]=${slug}&populate=*`;
+        let resDoc = await fetch(urlDoc, { headers: { 'Content-Type': 'application/json', ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}) }, next: { revalidate: 60 } });
+        let jsonDoc = await resDoc.json();
+
+        if (resDoc.ok && jsonDoc.data && jsonDoc.data.length > 0) {
+            return processSingleItem(jsonDoc.data[0]);
+        }
+
+        // 3. Last resort: Escaneo manual
         const fallbackUrl = `${STRAPI_URL}/api/articles?populate=*&sort[0]=publishedAt:desc&pagination[limit]=100`;
         const fallbackRes = await fetch(fallbackUrl, { headers: { 'Content-Type': 'application/json', ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}) }, next: { revalidate: 60 } });
         const fallbackJson = await fallbackRes.json();
@@ -77,7 +87,8 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
             const targetSlug = slug.toLowerCase().trim();
             const foundItem = fallbackJson.data.find((item: any) => {
                 const itemSlug = (item.attributes?.slug || item.slug || "").toLowerCase().trim();
-                return itemSlug === targetSlug;
+                const itemDocId = item.documentId || "";
+                return itemSlug === targetSlug || itemDocId === slug;
             });
 
             if (foundItem) return processSingleItem(foundItem);
@@ -86,7 +97,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
         return null;
 
     } catch (error) {
-        console.error(`Critical error fetching article slug: ${slug}`, error);
+        console.error(`Critical error fetching article slug or id: ${slug}`, error);
         return null;
     }
 }
@@ -95,10 +106,13 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 function processSingleItem(item: any): BlogPost {
     const attr = item.attributes || item;
 
+    // RESILIENCIA: Si el slug es nulo, usamos el documentId para que no se rompa el enlace
+    const finalSlug = attr.slug || item.documentId || item.id?.toString();
+
     return {
         id: item.id,
         title: attr.title,
-        slug: attr.slug,
+        slug: finalSlug,
         category: attr.category?.data?.attributes?.name || attr.category?.name || "Sin categoría",
         publishedAt: new Date(attr.publishedAt).toLocaleDateString("en-US", {
             month: "short", day: "numeric", year: "numeric"
